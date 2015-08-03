@@ -4,6 +4,12 @@
 
 Very basic wrapper for PagerDuty API
 
+Current functionality:
+
+- create trigger for known service key, with incident key,
+- handle all documented errors,
+- attach context (links, images) to trigger,
+
 TODO:
 
 - build functionality to send alerts to PagerDuty facilities,
