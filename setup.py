@@ -72,11 +72,15 @@ setup(
     download_url=(
         'https://github.com/tirasu/pagerdutyapi/archive/v0.1.0.tar.gz'
     ),
-    install_requires=parse_requirements('requirements.txt'),
+    #install_requires=parse_requirements('requirements.txt'),
+    install_requires=[
+        'six',
+        'requests',
+    ],
     license='MIT',
-    long_description=open(os.path.join(CURRENT_DIR, 'README.rst')).read(),
+    #long_description=open(os.path.join(CURRENT_DIR, 'README.rst')).read(),
     name='pagerdutyapi',
     packages=['pagerdutyapi'],
     url='https://github.com/tirasu/pagerdutyapi/',
-    version='0.1.0',
+    version='0.1.1',
 )
