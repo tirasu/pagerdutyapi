@@ -43,9 +43,7 @@ setup(
     author='Tomasz Jaskowski',
     author_email='tadeck@gmail.com',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',  # just began
-        # 'Development Status :: 3 - Alpha',  # testing
-        # 'Development Status :: 4 - Beta',  # testing, but looks good
+        'Development Status :: 4 - Beta',  # testing, but looks good
         # 'Development Status :: 5 - Production/Stable',  # used on production
         'Intended Audience :: Developers',
         'Intended Audience :: Financial and Insurance Industry',
@@ -70,7 +68,7 @@ setup(
     ],
     description='PagerDuty support, mostly reporting alerts',
     download_url=(
-        'https://github.com/tirasu/pagerdutyapi/archive/v0.1.0.tar.gz'
+        'https://github.com/tirasu/pagerdutyapi/archive/v0.2.0.tar.gz'
     ),
     #install_requires=parse_requirements('requirements.txt'),
     install_requires=[
@@ -82,5 +80,5 @@ setup(
     name='pagerdutyapi',
     packages=['pagerdutyapi'],
     url='https://github.com/tirasu/pagerdutyapi/',
-    version='0.1.1',
+    version='0.2.0',
 )
