@@ -24,8 +24,11 @@ class PagerDutyHandler(logging.Handler):
         ):
             # no change needed, will be easily serialized
             return details
-        elif isinstance(details, list):
-            return [self.stringify_details(item) for item in details]
+        elif isinstance(details, (list, tuple)):
+            return details.__class__(
+                self.stringify_details(item)
+                for item in details
+            )
         elif isinstance(details, dict):
             return {
                 key: self.stringify_details(value)
@@ -54,6 +57,11 @@ class PagerDutyHandler(logging.Handler):
             if attr_name not in default_attr_names and
             attr_name not in ('incident_key',)
         }
+
+        if record.exc_info:
+            # This is an error case - need to add more information about it
+            exc_class, exc_args, trace = record.exc_info
+            extra_details['error'] = repr(exc_class(*exc_args))
 
         incident_key = self.incident_key
         if incident_key is NOT_PROVIDED:

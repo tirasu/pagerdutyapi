@@ -165,3 +165,54 @@ class PagerDutyLoggingHandlerTestCase(TestCase):
                 },
             ],
         )
+
+    def test_intercepting_error(self):
+        """
+        Raise error and check if handler will send it properly
+        """
+        intercepted = []
+
+        def fake_create_trigger(**kwargs):
+            intercepted.append(kwargs)
+
+        service_id = 'ABCDEF'
+        incident_key ='DEF123'
+        message_template = '%s meets %s'
+        args = ('Sally', 'Larry')
+
+        error_repr = None
+
+        # Configure logging and retrieve logger:
+        self.configure_logging_dict(
+            service_id=service_id,
+        )
+        logger = logging.getLogger('fake_pd')
+
+        with override_attribute(
+            pagerdutyapi, 'create_trigger', fake_create_trigger,
+        ):
+            try:
+                int('A')
+            except ValueError as e:
+                error_repr = repr(e)
+                logger.exception(
+                    message_template,
+                    *args,
+                    extra={
+                        'incident_key': incident_key,
+                    }
+                )
+
+        self.assertEqual(
+            intercepted,
+            [
+                {
+                    'details': {
+                        'error': error_repr,
+                    },
+                    'incident_key': incident_key,
+                    'message': message_template % args,
+                    'service_key': service_id,
+                },
+            ],
+        )
