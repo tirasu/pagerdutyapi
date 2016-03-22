@@ -6,6 +6,7 @@ Library for connecting to PagerDuty
 @contact: http://github.com/tadeck
 @license: MIT
 """
+import json
 import requests
 
 from .contexts import PagerDutyContext
@@ -83,7 +84,8 @@ def create_trigger(
 
     response = requests.post(
         _EVENTS_URL,
-        data=payload,
+        data=json.dumps(payload),
+        headers={'content-type': 'application/json'},
     )
 
     if response.status_code == 200:
