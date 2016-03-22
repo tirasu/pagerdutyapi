@@ -83,7 +83,7 @@ def create_trigger(
 
     response = requests.post(
         _EVENTS_URL,
-        json=payload,
+        data=payload,
     )
 
     if response.status_code == 200:
