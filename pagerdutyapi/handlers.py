@@ -3,8 +3,15 @@ Logging support for PagerDuty handlers
 """
 import logging
 
+import six
+
 import pagerdutyapi
 
+
+if six.PY3:
+    PRIMITIVE_TYPES = (None.__class__, bool, int, float, bytearray, str)
+else:
+    PRIMITIVE_TYPES = (None.__class__, bool, int, float, str, unicode)
 
 NOT_PROVIDED = object()
 
@@ -19,21 +26,22 @@ class PagerDutyHandler(logging.Handler):
         super(PagerDutyHandler, self).__init__(**kwargs)
 
     def stringify_details(self, details):
-        if isinstance(
-            details, (None.__class__, bool, int, str, unicode, float),
-        ):
+        if isinstance(details, PRIMITIVE_TYPES):
             # no change needed, will be easily serialized
             return details
+
         elif isinstance(details, (list, tuple)):
             return details.__class__(
                 self.stringify_details(item)
                 for item in details
             )
+
         elif isinstance(details, dict):
             return {
                 key: self.stringify_details(value)
                 for key, value in details.items()
             }
+
         else:
             # Just string representation
             # TODO: Consider all issues that could occur here:
@@ -61,7 +69,10 @@ class PagerDutyHandler(logging.Handler):
         if record.exc_info:
             # This is an error case - need to add more information about it
             exc_class, exc_args, trace = record.exc_info
-            extra_details['error'] = repr(exc_class(*exc_args))
+            if six.PY3:
+                extra_details['error'] = repr(exc_args)
+            else:
+                extra_details['error'] = repr(exc_class(*exc_args))
 
         incident_key = self.incident_key
         if incident_key is NOT_PROVIDED:
